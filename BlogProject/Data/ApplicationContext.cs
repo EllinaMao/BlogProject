@@ -9,7 +9,7 @@ namespace BlogProject.Data
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+
         }
 
         public DbSet<Membership> Memberships { get; set; }

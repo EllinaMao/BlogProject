@@ -48,11 +48,16 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     try
     {
+        var applicationContext = services.GetRequiredService<ApplicationContext>();
+        //applicationContext.Database.EnsureDeleted();
+        applicationContext.Database.EnsureCreated();
+
+
+
         var userManager = services.GetRequiredService<UserManager<User>>();
         var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         await RoleInitializer.InitializeAsync(userManager, rolesManager);
 
-        var applicationContext = services.GetRequiredService<ApplicationContext>();
         await ContentInitializer.InitializeAsync(applicationContext);
     }
     catch (Exception ex)
