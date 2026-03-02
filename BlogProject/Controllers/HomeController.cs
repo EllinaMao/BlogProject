@@ -4,6 +4,10 @@ using System.Diagnostics;
 
 namespace BlogProject.Controllers
 {
+    /*
+     * наша задача для HomeController
+изменить действие индекс и отобразить все посты. Добавить пагинацию, поиск, фильтрацию
+     */
     public class HomeController : Controller
     {
         public IActionResult Index()
