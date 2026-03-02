@@ -24,6 +24,8 @@ builder.Services.AddIdentity<User, IdentityRole>(opts =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IMembership, MembershipRepository>();
+builder.Services.AddScoped<ICategory, CategoryRepository>();
+builder.Services.AddScoped<IPublication, PublicationRepository>();
 
 
 var app = builder.Build();
@@ -49,6 +51,9 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<User>>();
         var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         await RoleInitializer.InitializeAsync(userManager, rolesManager);
+
+        var applicationContext = services.GetRequiredService<ApplicationContext>();
+        await ContentInitializer.InitializeAsync(applicationContext);
     }
     catch (Exception ex)
     {
