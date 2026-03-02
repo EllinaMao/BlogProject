@@ -1,3 +1,4 @@
+using BlogProject.Interfaces;
 using BlogProject.Models;
 using BlogProject.ViewModels;
 using Microsoft.AspNetCore.Identity;
@@ -58,6 +59,64 @@ public class AccountController : Controller
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
     }
+    [Route("register")]
+    [HttpGet]
+    public async Task<IActionResult> Register([FromServices] IMembership membership, string? code)
+    {
+        if (!User.Identity.IsAuthenticated || code != null)
+        {
+            if (await membership.ExistsMembershipByCodeAsync(code))
+            {
+                if (await membership.EnableCodeMembershipByCodeAsync(code))
+                {
+                    return View(new RegisterUserViewModel { Code = code });
+                }
+            }
+        }
+        return RedirectToAction("Index", "Home");
+    }
+
+    [Route("register")]
+    [HttpPost]
+    [AutoValidateAntiforgeryToken]
+    public async Task<IActionResult> Register([FromServices] IMembership membership, RegisterUserViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var userCheck = await _userManager.FindByEmailAsync(model.Email);
+            if (userCheck != null)
+            {
+                ModelState.AddModelError("Email", "Такой email адрес уже есть!");
+                return View(model);
+            }
+            User user = new User { Email = model.Email, UserName = model.Email, Name = model.Name, PhoneNumber = model.Phone };
+            // добавляем пользователя
+            var result = await _userManager.CreateAsync(user, model.Password);
+            if (result.Succeeded)
+            {
+                //Установки роли. Сама роль находится в таблице AspNetRoles
+                //если таблица пустая, получим ошибку. Обязательно заполняем роли!
+                await _userManager.AddToRoleAsync(user, "Editor");
+                //используем приглашение
+                await membership.DisableMembershipCodeAsync(model.Code);
+                //установка куки
+                await _signInManager.SignInAsync(user, true);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+            }
+        }
+        return View(model);
+    }
+
+
+
+
 }
 
 
