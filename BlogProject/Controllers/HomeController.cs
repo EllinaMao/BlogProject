@@ -1,6 +1,7 @@
 using BlogProject.Interfaces;
 using BlogProject.Models;
 using BlogProject.Models.Pages;
+using BlogProject.Repositories;
 using BlogProject.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -13,40 +14,26 @@ namespace BlogProject.Controllers
      */
     public class HomeController : Controller
     {
-        private readonly IPublication _publication;
+        private readonly ICategory _categories;
+        private readonly IPublication _publications;
 
-        public HomeController(IPublication publication)
+        public HomeController(IPublication publication, ICategory categories)
         {
-            _publication = publication;
+            _categories = categories;
+            _publications = publication;
         }
-        public async Task<IActionResult> Index(QueryOptions options, Guid? categoryId)
+        public async Task<IActionResult> Index(QueryOptions? options, string? categoryId)
         {
-            var publications = await _publication.GetAllPublicationsWithCategoriesAsync();
-            if (categoryId.HasValue)
+            var allCategories = await _categories.GetAllCategoriesAsync();
+            var allPublications = await _publications.GetAllPublicationsByCategoryWithCategories(options, categoryId);
+
+            return View(new IndexViewModel
             {
-                publications = publications.Where(p => p.Categories.Any(c => c.Id == categoryId.Value)).ToList();
-            }
-
-            var viewModel = publications.Select(p => new MainPostViewModel
-            {
-                Id = p.Id,
-                Title = p.Title,
-                Description = p.Description,
-                Image = p.Image,
-                CreatedAt = p.CreatedAt,
-                TotalViews = p.TotalViews,
-                CategoryNames = p.Categories.Select(c => c.Name)
-            }).ToList();
-
-
-            //var pagedList = new PagedList<MainPostViewModel>(viewModel, options)
-            //{
-            //    CategoryId = categoryId
-            //};
-
-
-            return View();
+                Categories = allCategories.ToList(),
+                Publications = allPublications
+            });
         }
+
 
         public IActionResult Privacy()
         {

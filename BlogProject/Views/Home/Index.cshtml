@@ -1,5 +1,105 @@
-﻿@{
-    ViewData["Title"] = "Blog home Page";
+﻿@model IndexViewModel
+@{
+	ViewData["Title"] = "Блог";
+	ViewData["Description"] = "Блог о путешествиях, рассказы из жизни.";
+	ViewData["Keywords"] = "путешествия, истории жизни.";
 }
 
+<link rel="stylesheet" href="~/css/book/home.css" asp-append-version="true" />
 
+<header class="py-5 hero-header">
+	<div class="container px-4 px-lg-5 my-5">
+		<div class="text-center text-white">
+			<h1 class="display-4 fw-bolder">Блог</h1>
+			<p class="lead fw-normal text-white-50 mb-0">У настоящего путешественника нет определенного плана и намерения куда-либо приехать</p>
+		</div>
+	</div>
+</header>
+
+<div class="container my-5">
+	<div class="row">
+		<div class="col-lg-3">
+			<div class="sticky-sidebar">
+				@{
+					ViewBag.sorts = new string[] { "", "Title", "TotalViews", "CreatedAt" };
+				}
+
+				@await Html.PartialAsync("_PageOptions", Model.Publications)
+
+				<div class="card border-0 shadow-sm rounded-3 mb-4">
+					<div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 fw-bold">Жанры</div>
+					<div class="card-body">
+						<div class="row gx-2">
+							<div class="col-sm-6">
+								<div class="d-flex flex-column">
+									@for (int i = 0; i < Model.Categories.Count / 2; i++)
+									{
+										<a href="@Url.Action(action: "Index", controller: "Home", values: new { categoryId = Model.Categories[i].Id }, protocol: "https")" class="genre-tag">@Model.Categories[i].Name</a>
+									}
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<div class="d-flex flex-column">
+									@for (int i = Model.Categories.Count / 2; i < Model.Categories.Count; i++)
+									{
+										<a href="@Url.Action(action: "Index", controller: "Home", values: new { categoryId = Model.Categories[i].Id }, protocol: "https")" class="genre-tag">@Model.Categories[i].Name</a>
+									}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="card border-0 shadow-sm rounded-3 mb-4">
+					<div class="card-header bg-transparent border-bottom-0 pt-4 pb-0 fw-bold">Рекламный блок</div>
+					<div class="card-body text-muted text-center py-4">
+						Здесь могла быть ваша реклама.
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-lg-9">
+			<div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-2 justify-content-center">
+
+				@foreach (Publication publication in Model.Publications)
+				{
+					<div class="col mb-5">
+						<div class="card card-post h-100">
+							@if (@publication.Image != null)
+							{
+								<img class="card-img-top book-preview" src="@publication.Image" alt="@publication.Title">
+							}
+							<div class="card-body p-4">
+								<div class="text-center">
+									<h5 class="fw-bolder text-dark mb-2">@publication.Title</h5>
+									<div class="small text-muted mb-3">
+										@String.Join(", ", publication.Categories.Select(e => e.Name))
+									</div>
+									<div class="d-inline-flex align-items-center bg-light rounded-pill px-3 py-1 text-secondary small border">
+										<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" class="bi bi-eye-fill me-2" viewBox="0 0 16 16">
+											<path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z" />
+											<path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" />
+										</svg>
+										<span>@publication.TotalViews</span>
+									</div>
+								</div>
+							</div>
+							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+								<div class="text-center">
+									<a href="#" class="btn btn-primary rounded-pill px-4">Читать</a>
+								</div>
+							</div>
+						</div>
+					</div>
+				}
+
+			</div>
+
+			<div class="text-center mt-4">
+				@await Html.PartialAsync("Pages", Model)
+			</div>
+
+		</div>
+	</div>
+</div>

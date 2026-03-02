@@ -2,6 +2,7 @@
 using BlogProject.Data;
 using BlogProject.Interfaces;
 using BlogProject.Models;
+using BlogProject.Models.Pages;
 using Microsoft.EntityFrameworkCore;
 
 namespace BlogProject.Repositories
@@ -77,5 +78,30 @@ namespace BlogProject.Repositories
         {
             await _context.Database.ExecuteSqlInterpolatedAsync($"UPDATE [Publications] SET [TotalViews] += 1 WHERE Id = '{id}'");
         }
+
+
+        public IQueryable<Publication> GetPublicationsQuery()
+        {
+            return _context.Publications.AsQueryable();
+        }
+
+        public IQueryable<Publication> GetPublicationsWithCategoriesQuery()
+        {
+            return _context.Publications.Include(e => e.Categories).AsQueryable();
+        }
+
+        public async Task<PagedList<Publication>> GetAllPublicationsByCategoryWithCategories(QueryOptions options, string id)
+        {
+            var category = await _context.Categories.FirstOrDefaultAsync(e => e.Id.ToString() == id);
+            if (category is not null)
+            {
+                return new PagedList<Publication>(_context.Publications.Include(e => e.Categories).Where(e => e.Categories.Contains(category)), options);
+            }
+            else
+            {
+                return new PagedList<Publication>(_context.Publications.Include(e => e.Categories), options);
+            }
+        }
+
     }
 }

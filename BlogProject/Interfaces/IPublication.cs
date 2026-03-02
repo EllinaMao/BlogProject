@@ -1,4 +1,5 @@
 ﻿using BlogProject.Models;
+using BlogProject.Models.Pages;
 
 namespace BlogProject.Interfaces
 {
@@ -14,6 +15,12 @@ namespace BlogProject.Interfaces
         Task AddPublicationAsync(Publication publication);
         Task UpdatePublicationAsync(Publication publication);
         Task DeletePublicationAsync(Publication publication);
+
+
+        IQueryable<Publication> GetPublicationsQuery();
+        IQueryable<Publication> GetPublicationsWithCategoriesQuery();
+
+        Task<PagedList<Publication>> GetAllPublicationsByCategoryWithCategories(QueryOptions options, string id);
     }
 
 }
