@@ -11,5 +11,8 @@ namespace BlogProject.Data
         {
             Database.EnsureCreated();
         }
+
+        public DbSet<Membership> Memberships { get; set; }
+
     }
 }

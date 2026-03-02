@@ -1,5 +1,7 @@
 using BlogProject.Data;
+using BlogProject.Interfaces;
 using BlogProject.Models;
+using BlogProject.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,6 +23,8 @@ builder.Services.AddIdentity<User, IdentityRole>(opts =>
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
+builder.Services.AddScoped<IMembership, MembershipRepository>();
+
 
 var app = builder.Build();
 
