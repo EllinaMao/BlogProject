@@ -29,7 +29,17 @@ namespace BlogProject.Data
             new { Email = "alex@gmail.com", Name = "Alex", Password = "DS(A)DS"  },
             new { Email = "marry@in.ua", Name = "Marry", Password = "q1d561SD"  },
             new { Email = "tom@ukr.net", Name = "Tom", Password = "12312DSAss"  },
-            new { Email = "john@gmail.com", Name = "John", Password = "ds0012sd"  }
+            new { Email = "john@gmail.com", Name = "John", Password = "ds0012sd"  },
+            new { Email = "manny@in.ua", Name = "Marry", Password = "q1d561SD"  },
+            new { Email = "tome@ukr.net", Name = "Tom", Password = "12312DSAss"  },
+            new { Email = "johndd@gmail.com", Name = "John", Password = "ds0012sd"  },
+            new { Email = "alexa@gmail.com", Name = "Alex", Password = "DS(A)DS"  },
+            new { Email = "marryb@in.ua", Name = "Marry", Password = "q1d561SD"  },
+            new { Email = "tomwa@ukr.net", Name = "Tom", Password = "12312DSAss"  },
+            new { Email = "johntu@gmail.com", Name = "John", Password = "ds0012sd"  },
+            new { Email = "mannyda@in.ua", Name = "Marry", Password = "q1d561SD"  },
+            new { Email = "tomere@ukr.net", Name = "Tom", Password = "12312DSAss"  },
+            new { Email = "johndod@gmail.com", Name = "John", Password = "ds0012sd"  },
             };
 
                 foreach (var user in users)

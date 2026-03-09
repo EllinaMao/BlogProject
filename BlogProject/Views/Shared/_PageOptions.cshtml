@@ -1,4 +1,6 @@
-﻿<div class="card mb-4">
+﻿@model dynamic
+
+<div class="card mb-4">
 	<div class="card-header">Фильтры</div>
 	<div class="card-body">
 		<div class="input-group align-items-center">
@@ -16,15 +18,13 @@
 					<li><b>Сортировка:</b> @Model.Options.OrderName</li>
 				}
 				<li><b>Текущая страница:</b> @Model.CurrentPage</li>
-				<li><b>Публикаций на страницу:</b> @Model.PageSize</li>
-				<li><b>Всего публикаций:</b> @Model.TotalItems</li>
+				<li><b>Элементов на страницу:</b> @Model.PageSize</li>
+				<li><b>Всего элементов:</b> @Model.TotalItems</li>
 			</ul>
 		</div><br />
 		<a href="@ViewContext.HttpContext.Request.Path" class="btn btn-outline-primary">Сбросить фильтры</a>
 	</div>
 </div>
-
-
 
 <div class="card mb-4">
 	<div class="card-header">Поиск</div>
@@ -35,7 +35,6 @@
 		</div>
 	</div>
 </div>
-
 
 <div class="card mb-4">
 	<div class="card-header">Сортировка</div>
@@ -52,6 +51,8 @@
 								"Title" => "Название",
 								"TotalViews" => "Просмотры",
 								"CreatedAt" => "Дата публикации",
+								"Email" => "Email",
+								"Name" => "Имя",
 								"" => "Не выбрано",
 								_ => value
 							}

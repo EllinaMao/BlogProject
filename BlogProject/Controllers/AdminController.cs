@@ -1,7 +1,9 @@
 using BlogProject.Models;
+using BlogProject.Models.Pages;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 
 [Authorize(Roles = "Admin")]
 public class AdminController : Controller
@@ -17,7 +19,20 @@ public class AdminController : Controller
 
     [Route("users")]
     [HttpGet]
-    public IActionResult Index() => View(_userManager.Users.ToList());
+    public IActionResult Index(QueryOptions options)
+    {
+        if (string.IsNullOrEmpty(options.SearchPropertyName) || options.SearchPropertyName == "Title")
+        {
+            options.SearchPropertyName = "Email";
+        }
+
+        IQueryable<User> query = _userManager.Users;
+
+        PagedList<User> pagedList = new PagedList<User>(query, options);
+
+        return View(pagedList);
+
+    }
 
     [Route("edit-user")]
     [HttpGet]
